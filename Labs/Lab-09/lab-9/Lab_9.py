@@ -30,6 +30,8 @@ def closeConnection(_conn, _dbFile):
     print("++++++++++++++++++++++++++++++++++")
 
 
+# Create a view V1(c_custkey, c_name, c_address, c_phone, c_acctbal, c_mktsegment, c_comment, c_nation,
+# c_region) that appends the country and region name to every customer. Rewrite Q1 from Lab 4 with view V1
 def create_View1(_conn):
     print("++++++++++++++++++++++++++++++++++")
     print("Create V1")
@@ -41,7 +43,7 @@ def create_View1(_conn):
             CREATE VIEW V1 AS
             SELECT c_custkey, c_name, c_address, c_phone, c_acctbal, c_mktsegment, 
                 c_comment, n_name as c_nation, r_name as c_region
-            FROM customer, nation, region
+            FROM nation, region, customer
             WHERE c_nationkey = n_nationkey
             AND n_regionkey = r_regionkey
         """
@@ -65,6 +67,14 @@ def Q1(_conn):
         header = "{}|{}"
         output.write((header.format("country", "cnt")) + '\n')
 
+        # select n_name as country, count(*) as cnt
+        # from orders, nation, region, customer
+        # where c_custkey = o_custkey
+        #     and c_nationkey = n_nationkey
+        #     and n_regionkey = r_regionkey
+        #     and r_name='EUROPE'
+        # group by n_name;
+
         sql = """
             SELECT c_nation as country, count(*) as cnt
             FROM orders, V1
@@ -86,7 +96,9 @@ def Q1(_conn):
 
     print("++++++++++++++++++++++++++++++++++")
 
-
+# Create a view V2(o orderkey, o custkey, o orderstatus, o totalprice, o orderyear, o orderpriority, o clerk,
+# o shippriority, o comment) that replaces o orderdate with the year o orderyear and contains all the
+# other attributes in orders. Rewrite Q2 from Lab 4 with views V1 and V2
 def create_View2(_conn):
     print("++++++++++++++++++++++++++++++++++")
     print("Create V2")
